@@ -1,11 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useEffect, useState} from 'react';
+import fetchRandomImage from './requests/requestHandler';
 
 function App() {
+  const [imageUrl, setImageUrl] = useState<string>();
+
+  const loadImage = async () => {
+    const imageLink = await fetchRandomImage();
+    setImageUrl(imageLink);
+  }
+
+  useEffect(() => {
+    loadImage()
+  }, []);
+
   return (
     <>
-      hola
+      <div>
+        <h1>Image:</h1>
+        <img src={imageUrl} alt="randomimage" />
+      </div>
     </>
   );
 }
