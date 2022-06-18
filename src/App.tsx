@@ -5,6 +5,8 @@ import { Gallery } from './components/Gallery';
 
 function App() {
 
+  
+  console.log(!!window.localStorage.getItem('prueba'));
   return (
     <>
         <Box>
