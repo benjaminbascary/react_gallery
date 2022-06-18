@@ -1,5 +1,6 @@
-import { loadImagesFromLocalStorage, saveImagesIntoLocalStorage } from '../localStorageHandler/localStorageHandler';
-import { imagesMapper } from '../map/imagesMapper';
+import { loadImagesFromLocalStorage, loadKeywordImagesFromLocalStorage, saveImagesIntoLocalStorage, saveKeywordImagesIntoLocalStorage } from '../localStorageHandler/localStorageHandler';
+import { imagesMapper } from '../adapters/imagesMapper';
+import { UrlsInterface } from '../types/types';
 
 const axios = require('axios').default;
 const RANDOM_IMAGE_API_URL = "https://api.unsplash.com/photos/random/";
@@ -36,13 +37,28 @@ export const fetchAllImages = async () => {
 			saveImagesIntoLocalStorage(data);
 			return data;
 		} catch(error) {
-			console.log(error.response.data)
+			return error.response.data
 		}  
 	} else {
-		const data = JSON.parse(loadImagesFromLocalStorage(), undefined, 4);
+		const data = JSON.parse(loadImagesFromLocalStorage());
 		if (data) console.log("Loaded images url's from sessionStorage");
 		return data;
 	}
     
 }
 
+export const searchImagesByKeyword = async (keyword) => {
+		try {
+			const response = await axios.get(`https://api.unsplash.com/search/photos?page=1&query=${keyword}`, {
+				headers: {
+					Authorization: `Client-ID ${KEY}`
+				}
+			});
+			const data = imagesMapper(await response.data.results)
+			saveKeywordImagesIntoLocalStorage(data, keyword);
+			return data
+		} catch(error) {
+			console.log(error.response.data);
+		}
+
+}

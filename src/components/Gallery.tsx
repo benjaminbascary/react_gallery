@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react'
-import {fetchRandomImage, DEFAULT_PNG_ROUTE } from '../requests/requestHandler';
+import {fetchRandomImage, DEFAULT_PNG_ROUTE } from '../services/requestHandler';
 import { Box, Button, Image, Badge } from '@chakra-ui/react';
 
-export const Gallery = () => {
+const Gallery = () => {
 	const [imageUrl, setImageUrl] = useState<string>();
 	const [error, setError] = useState<boolean>(false);
 
@@ -20,6 +20,7 @@ export const Gallery = () => {
 
 	const handleReload = () => {
 		loadImage();
+		
 	}
 
   return (
@@ -48,3 +49,5 @@ export const Gallery = () => {
 		</>
   )
 }
+
+export default Gallery;
