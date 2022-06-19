@@ -49,7 +49,7 @@ export const fetchAllImages = async () => {
 
 export const searchImagesByKeyword = async (keyword) => {
 		try {
-			const response = await axios.get(`https://api.unsplash.com/search/photos?page=1&query=${keyword}`, {
+			const response = await axios.get(`https://api.unsplash.com/search/photos?page=1&query=${encodeURI(keyword)}`, {
 				headers: {
 					Authorization: `Client-ID ${KEY}`
 				}
