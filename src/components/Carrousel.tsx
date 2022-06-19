@@ -1,41 +1,55 @@
-import { Box, Image } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
-import { fetchAllImages } from '../services/requestHandler';
+import useCarrouselImages from '../hooks/useCarrouselImages';
 import { Loading } from './Loading';
-
-type CarrouselProps = {
-  images: string[];
-}
+import { 
+	Box, 
+	GridItem, 
+	Image, 
+	Grid, 
+	Divider 
+} from '@chakra-ui/react';
 
 const Carrousel = () => {
 
-	const [images, setImages] = useState<string[]>();
-	const [loading, setLoading] = useState<boolean>(true);
+	const [images] = useCarrouselImages();
 
-	const loadImages = async () => {
-		const imagesArray = await fetchAllImages();
-		if(imagesArray) {
-			setImages(imagesArray);
-			setLoading(false);
-		}
-	}
-
-	useEffect(() => {
-		loadImages()
-	}, [])
-
-  return (
-    <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-      {
-		images ? images.map(eachUrl => {
-			return <Image borderRadius='10px' src={eachUrl} alt="blahblah" maxW='70%' key={eachUrl} />
+	return (
+		<>
+		<Divider />
+		<Box 
+			display="flex" 
+			flexDirection="column" 
+			justifyContent="center" 
+			alignItems='center'
+			>
+			<Grid templateColumns="repeat(3, 2fr)" gap="6">
+			{
+				images ? images.map(eachUrl => {
+					return(
+						<GridItem 
+							display="flex" 
+							flexDirection="row" 
+							alignItems="center" 
+							justifyContent="center"
+							key={eachUrl} 
+							>
+							<Image 
+								borderRadius='10px' 
+								height="auto" 
+								src={eachUrl} 
+								alt="blahblah" 
+								maxW='70%' 
+								/>
+						</GridItem>
+					) 
+					}
+				) : (
+					<Loading />
+				)
 			}
-		) : (
-			<Loading />
-		)
-			}
-    </Box>
-  )
+			</Grid>
+		</Box>
+		</>
+	)
 }
 
 export default Carrousel;

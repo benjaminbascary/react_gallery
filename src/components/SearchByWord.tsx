@@ -1,47 +1,67 @@
-import { Box, CircularProgress, FormLabel, Heading, Image, Input, Text } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react'
-import { searchImagesByKeyword } from '../services/requestHandler';
+import useSearch from '../hooks/useSearch';
 import { Loading } from './Loading';
+import { 
+	Box, 
+	FormLabel, 
+	Heading, 
+	Image, 
+	Input,
+	Divider, 
+	Grid,
+	GridItem
+} from '@chakra-ui/react';
 
-export const SearchByWord = () => {
+const SearchByWord = () => {
 
-	const [images, setImages] = useState<string[]>();
-	const [searchInput, setSearchInput] = useState<string>();
-	const [loading, setLoading] = useState<boolean>(false);
+	const [images, loading, handleChange] = useSearch();
 
-	const handleChange = async (event: any) => {
-		setSearchInput(prevValue => event.target.value)
-	}
-
-	const loadImages = async () => {
-		setLoading(true);
-		const data = await searchImagesByKeyword(searchInput);
-		console.log(data);
-		setImages(data);
-		setLoading(false);
-	}
-
-	useEffect(() => {
-		
-		!!searchInput && setTimeout(() => loadImages(), 1000);
-	}, [searchInput]);
   return (
 		<>
-		<hr />
-    <Box display="flex" flexDirection="column" alignItems="center" marginTop='5vh' minH="100vh" marginBottom="5vh">
+		<Divider orientation='horizontal' />
+    <Box 
+			display="flex" 
+			flexDirection="column" 
+			alignItems="center" 
+			marginTop='5vh' 
+			minH="100vh" 
+			marginBottom="5vh"
+			>
 			<Heading>Search...</Heading>
 			<FormLabel>
-				<Input placeholder='Type a subject...' width='50vh' onChange={handleChange}/>
+				<Input 
+					placeholder='Type a subject...' 
+					width='50vh' 
+					onChange={handleChange}
+					/>
 			</FormLabel>
 			{
 				loading ? <Loading /> : null
 			}
-			{
+			<Grid templateColumns="repeat(3, 2fr)" gap="6">
+				{
 				images && images.map(eachUrl => {
-					return <Image borderRadius='10px' src={eachUrl} alt="blahblah" maxW='70%' key={eachUrl}  />
+					return(
+						<GridItem 
+							display="flex" 
+							flexDirection="row" 
+							alignItems="center" 
+							justifyContent="center"
+							>
+							<Image 
+								borderRadius='10px' 
+								height="auto" 
+								src={eachUrl} 
+								alt="blahblah" 
+								maxW='70%' 
+								key={eachUrl} />
+						</GridItem>
+					) 
 				})
-			}
+				}
+			</Grid>
 		</Box>
 		</>
   )
 }
+
+export default SearchByWord;
